@@ -155,6 +155,7 @@ class _LoadMoreState extends State<LoadMore> {
         // 成功，切换状态为空闲
         _updateStatus(LoadMoreStatus.idle);
       } else {
+        // 失败，切换状态为失败
         _updateStatus(LoadMoreStatus.fail);
       }
     });
@@ -193,7 +194,8 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        if (widget.status == LoadMoreStatus.fail) {
+        if (widget.status == LoadMoreStatus.fail ||
+            widget.status == LoadMoreStatus.idle) {
           _RetryNotify().dispatch(context);
         }
       },
