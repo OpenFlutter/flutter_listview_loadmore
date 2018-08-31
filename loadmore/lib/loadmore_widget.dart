@@ -7,14 +7,20 @@ typedef Future<bool> FutureCallBack();
 
 class LoadMore extends StatefulWidget {
   final Widget child;
+
+  /// return true is refresh success
+  ///
+  /// return false or null is fail
   final FutureCallBack onLoadMore;
   final bool isFinish;
+  final LoadMoreDelegate delegate;
 
   const LoadMore({
     Key key,
     this.child,
     this.onLoadMore,
     this.isFinish = false,
+    this.delegate = const DefaultLoadMoreDelegate(),
   }) : super(key: key);
 
   @override
@@ -23,16 +29,16 @@ class LoadMore extends StatefulWidget {
 
 class _LoadMoreState extends State<LoadMore> {
   Widget get child => widget.child;
-  GlobalKey loadMoreKey;
+
+  LoadMoreDelegate get loadMoreDelegate => widget.delegate;
+
   @override
   void initState() {
     super.initState();
-    loadMoreKey = GlobalKey();
   }
 
   @override
   void dispose() {
-    loadMoreKey = null;
     super.dispose();
   }
 
@@ -113,6 +119,7 @@ class _LoadMoreState extends State<LoadMore> {
       child: NotificationListener<_BuildNotify>(
         child: DefaultLoadMoreView(
           status: status,
+          delegate: loadMoreDelegate,
         ),
         onNotification: _onLoadMoreBuild,
       ),
@@ -178,16 +185,24 @@ enum LoadMoreStatus {
 
 class DefaultLoadMoreView extends StatefulWidget {
   final LoadMoreStatus status;
+  final LoadMoreDelegate delegate;
   const DefaultLoadMoreView({
     Key key,
     this.status = LoadMoreStatus.idle,
+    this.delegate,
   }) : super(key: key);
 
   @override
   DefaultLoadMoreViewState createState() => DefaultLoadMoreViewState();
 }
 
+const _defaultLoadMoreHeight = 80.0;
+const _loadmoreIndicatorSize = 33.0;
+const _loadMoreDelay = 100;
+
 class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
+  LoadMoreDelegate get delegate => widget.delegate;
+
   @override
   Widget build(BuildContext context) {
     notify();
@@ -200,21 +215,40 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
         }
       },
       child: Container(
-        height: 80.0,
+        height: delegate.viewHeight(widget.status),
         alignment: Alignment.center,
-        child: _buildChild(widget.status),
+        child: delegate.buildChild(widget.status),
       ),
     );
   }
 
   void notify() async {
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(delegate.loadMoreDelay());
     if (widget.status == LoadMoreStatus.idle) {
       _BuildNotify().dispatch(context);
     }
   }
+}
 
-  _buildChild(LoadMoreStatus status) {
+class _BuildNotify extends Notification {}
+
+class _RetryNotify extends Notification {}
+
+abstract class LoadMoreDelegate {
+  const LoadMoreDelegate();
+
+  double viewHeight(LoadMoreStatus status) => _defaultLoadMoreHeight;
+
+  Duration loadMoreDelay() => Duration(milliseconds: _loadMoreDelay);
+
+  Widget buildChild(LoadMoreStatus status);
+}
+
+class DefaultLoadMoreDelegate extends LoadMoreDelegate {
+  const DefaultLoadMoreDelegate();
+
+  @override
+  Widget buildChild(LoadMoreStatus status) {
     if (status == LoadMoreStatus.fail) {
       return Container(
         child: Text('加载失败，请点击重试'),
@@ -230,8 +264,8 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-              width: 40.0,
-              height: 40.0,
+              width: _loadmoreIndicatorSize,
+              height: _loadmoreIndicatorSize,
               child: CircularProgressIndicator(
                 backgroundColor: Colors.blue,
               ),
@@ -251,7 +285,3 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
     return Text('没有更多了');
   }
 }
-
-class _BuildNotify extends Notification {}
-
-class _RetryNotify extends Notification {}

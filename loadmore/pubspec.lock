@@ -64,13 +64,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.14.5"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.1.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -151,13 +144,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.3.4"
-  loadmore:
-    dependency: "direct main"
-    description:
-      path: loadmore
-      relative: true
-    source: path
-    version: "0.0.1"
   logging:
     dependency: transitive
     description:
