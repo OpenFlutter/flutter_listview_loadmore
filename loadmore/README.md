@@ -9,7 +9,7 @@ only support listview
 ![img](https://github.com/CaiJingLong/some_asset/blob/master/loadmore1.gif)
 
 ## whole example
-show `https://github.com/CaiJingLong/flutter_listview_loadmore`
+show https://github.com/CaiJingLong/flutter_listview_loadmore
 
 ## install
 
