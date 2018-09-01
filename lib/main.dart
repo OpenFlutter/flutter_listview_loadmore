@@ -28,6 +28,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int get count => list.length;
+
+  List<int> list = [];
+
+  void initState() {
+    super.initState();
+    // list.addAll(List.generate(30, (v) => v));
+  }
+
+  void load() {
+    setState(() {
+      list.addAll(List.generate(15, (v) => v));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -36,18 +51,20 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Container(
         child: LoadMore(
-          isFinish: false,
+          isFinish: count >= 60,
           onLoadMore: _loadMore,
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                child: Text(index.toString()),
+                child: Text(list[index].toString()),
                 height: 40.0,
                 alignment: Alignment.center,
               );
             },
-            itemCount: 50,
+            itemCount: count,
           ),
+          delegate: DefaultLoadMoreDelegate(),
+          textBuilder: DefaultLoadMoreTextBuilder.english,
         ),
       ),
     );
@@ -55,7 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<bool> _loadMore() async {
     print("onLoadMore");
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 0, milliseconds: 2000));
+    load();
     return true;
   }
 }

@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-/// 返回值为true为成功，否则视为失败
+/// return true is refresh success
+///
+/// return false or null is fail
 typedef Future<bool> FutureCallBack();
 
 class LoadMore extends StatefulWidget {
@@ -14,11 +16,13 @@ class LoadMore extends StatefulWidget {
   final FutureCallBack onLoadMore;
   final bool isFinish;
   final LoadMoreDelegate delegate;
+  final LoadMoreTextBuilder textBuilder;
 
   const LoadMore({
     Key key,
-    this.child,
-    this.onLoadMore,
+    @required this.child,
+    @required this.onLoadMore,
+    this.textBuilder = DefaultLoadMoreTextBuilder.chinese,
     this.isFinish = false,
     this.delegate = const DefaultLoadMoreDelegate(),
   }) : super(key: key);
@@ -120,6 +124,7 @@ class _LoadMoreState extends State<LoadMore> {
         child: DefaultLoadMoreView(
           status: status,
           delegate: loadMoreDelegate,
+          textBuilder: widget.textBuilder,
         ),
         onNotification: _onLoadMoreBuild,
       ),
@@ -128,7 +133,6 @@ class _LoadMoreState extends State<LoadMore> {
   }
 
   bool _onLoadMoreBuild(_BuildNotify notification) {
-    print("onLoadMoreBuild status = $status");
     //判断状态，触发对应的操作
     if (status == LoadMoreStatus.loading) {
       return false;
@@ -171,25 +175,35 @@ class _LoadMoreState extends State<LoadMore> {
 
 enum LoadMoreStatus {
   /// 空闲中，表示当前等待加载
+  ///
+  /// wait for loading
   idle,
 
   /// 刷新中，不应该继续加载，等待future返回
+  ///
+  /// the view is loading
   loading,
 
   /// 刷新失败，刷新失败，这时需要点击才能刷新
+  ///
+  /// loading fail, need tap view to loading
   fail,
 
   /// 没有更多，没有更多数据了，这个状态不触发任何条件
+  ///
+  /// not have more data
   nomore,
 }
 
 class DefaultLoadMoreView extends StatefulWidget {
   final LoadMoreStatus status;
   final LoadMoreDelegate delegate;
+  final LoadMoreTextBuilder textBuilder;
   const DefaultLoadMoreView({
     Key key,
     this.status = LoadMoreStatus.idle,
-    this.delegate,
+    @required this.delegate,
+    @required this.textBuilder,
   }) : super(key: key);
 
   @override
@@ -215,9 +229,12 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
         }
       },
       child: Container(
-        height: delegate.viewHeight(widget.status),
+        height: delegate.widgetHeight(widget.status),
         alignment: Alignment.center,
-        child: delegate.buildChild(widget.status),
+        child: delegate.buildChild(
+          widget.status,
+          builder: widget.textBuilder,
+        ),
       ),
     );
   }
@@ -237,25 +254,28 @@ class _RetryNotify extends Notification {}
 abstract class LoadMoreDelegate {
   const LoadMoreDelegate();
 
-  double viewHeight(LoadMoreStatus status) => _defaultLoadMoreHeight;
+  double widgetHeight(LoadMoreStatus status) => _defaultLoadMoreHeight;
 
   Duration loadMoreDelay() => Duration(milliseconds: _loadMoreDelay);
 
-  Widget buildChild(LoadMoreStatus status);
+  Widget buildChild(LoadMoreStatus status,
+      {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese});
 }
 
 class DefaultLoadMoreDelegate extends LoadMoreDelegate {
   const DefaultLoadMoreDelegate();
 
   @override
-  Widget buildChild(LoadMoreStatus status) {
+  Widget buildChild(LoadMoreStatus status,
+      {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese}) {
+    String text = builder(status);
     if (status == LoadMoreStatus.fail) {
       return Container(
-        child: Text('加载失败，请点击重试'),
+        child: Text(text),
       );
     }
     if (status == LoadMoreStatus.idle) {
-      return Text('等待加载更多');
+      return Text(text);
     }
     if (status == LoadMoreStatus.loading) {
       return Container(
@@ -272,16 +292,66 @@ class DefaultLoadMoreDelegate extends LoadMoreDelegate {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("加载中，请稍候"),
+              child: Text(text),
             ),
           ],
         ),
       );
     }
     if (status == LoadMoreStatus.nomore) {
-      return Text('没有更多了');
+      return Text(text);
     }
 
-    return Text('没有更多了');
+    return Text(text);
   }
+}
+
+typedef String LoadMoreTextBuilder(LoadMoreStatus status);
+
+String _buildChineseText(LoadMoreStatus status) {
+  String text;
+  switch (status) {
+    case LoadMoreStatus.fail:
+      text = "加载失败，请点击重试";
+      break;
+    case LoadMoreStatus.idle:
+      text = "等待加载更多";
+      break;
+    case LoadMoreStatus.loading:
+      text = "加载中，请稍候...";
+      break;
+    case LoadMoreStatus.nomore:
+      text = "到底了，别扯了";
+      break;
+    default:
+      text = "";
+  }
+  return text;
+}
+
+String _buildEnglishText(LoadMoreStatus status) {
+  String text;
+  switch (status) {
+    case LoadMoreStatus.fail:
+      text = "load fail, tap to retry";
+      break;
+    case LoadMoreStatus.idle:
+      text = "wait for loading";
+      break;
+    case LoadMoreStatus.loading:
+      text = "loading, wait for moment ...";
+      break;
+    case LoadMoreStatus.nomore:
+      text = "no more data";
+      break;
+    default:
+      text = "";
+  }
+  return text;
+}
+
+class DefaultLoadMoreTextBuilder {
+  static const LoadMoreTextBuilder chinese = _buildChineseText;
+
+  static const LoadMoreTextBuilder english = _buildEnglishText;
 }

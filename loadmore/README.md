@@ -1,9 +1,93 @@
 # loadmore
 
-A new flutter package project.
+A loadMore library
 
-## Getting Started
+only support listview
 
-For help getting started with Flutter, view our online [documentation](https://flutter.io/).
+## screenshot
 
-For help on editing package code, view the [documentation](https://flutter.io/developing-packages/).
+![img](https://github.com/CaiJingLong/some_asset/blob/master/loadmore1.gif)
+
+## whole example
+show `https://github.com/CaiJingLong/flutter_listview_loadmore`
+
+## install
+
+in `pubspec.yaml`
+
+```
+dependencies:
+  loadmore: ^0.0.1
+```
+
+import in dartfile:
+```
+import 'package:loadmore/loadmore.dart';
+```
+
+use in build:
+```dart
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text(widget.title),
+      ),
+      body: Container(
+        child: LoadMore(
+          isFinish: count >= 60, //
+          onLoadMore: _loadMore,
+          child: ListView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                child: Text(list[index].toString()),
+                height: 40.0,
+                alignment: Alignment.center,
+              );
+            },
+            itemCount: count,
+          ),
+          delegate:,
+        ),
+      ),
+    );
+  }
+
+  Future<bool> _loadMore() async {
+    print("onLoadMore");
+    await Future.delayed(Duration(seconds: 0, milliseconds: 100));
+    load();
+    return true;
+  }
+```
+
+properties use:
+
+```
+child: Widget ,required , support ListView ListView.builder ListView.separated, other is not support. 
+onLoadMore: A Function , `typedef Future<bool> FutureCallBack();` ,required , reture true is success and status delay,return false or null ,then the status will change to fail.
+isFinish: bool, if true, then the status will change to finish ,default is false
+delegate: LoadMoreDelegate, see the LoadMoreDelegate class,default is DefaultLoadMoreDelegate
+textBuilder: the result will show in loading view ,if you use default delegate. default is DefaultLoadMoreText.chinese,
+```
+
+```dart
+abstract class LoadMoreDelegate {
+  const LoadMoreDelegate();
+
+  double widgetHeight(LoadMoreStatus status) => _defaultLoadMoreHeight; // the loadMore height. default is 80.0
+
+  Duration loadMoreDelay() => Duration(milliseconds: _loadMoreDelay);// When widget is created, the refresh delay time is triggered.
+
+  Widget buildChild(LoadMoreStatus status); // build your widget in the loadmore widget.
+}
+
+```
+
+## other
+
+homePage: https://github.com/CaiJingLong/flutter_listview_loadmore
+emailto me : cjl_spy@163.com
+
+## LICENSE 
+APACHE 2.0
