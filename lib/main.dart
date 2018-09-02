@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
             itemCount: count,
           ),
           delegate: DefaultLoadMoreDelegate(),
-          textBuilder: DefaultLoadMoreTextBuilder.english,
+          textBuilder: DefaultLoadMoreTextBuilder.chinese,
         ),
       ),
     );

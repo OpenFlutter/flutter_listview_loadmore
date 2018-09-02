@@ -1,9 +1,9 @@
 # loadmore
 
-一个flutter的加载更多库
+for flutter `ListView` to scroll bottom loadmore data,not support ListView.custom
 
-使用的方案是将传入的ListView其他透传参数，ListView的children数量+1，来将child增加到最底部
+##usage
 
-当状态为idle/fail的时候 点击加载会生效，大部分情况下 idle只会持续300ms
+see the [pub](https://pub.dartlang.org/packages/loadmore)
 
-后续再添加至pub库
+or the [github](loadmore)
