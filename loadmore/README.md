@@ -4,6 +4,8 @@ A loadMore library
 
 only support listview
 
+[中文构思思路和使用说明可以看简书](https://www.jianshu.com/p/abfd6f525316)
+
 ## screenshot
 
 ![img](https://github.com/CaiJingLong/some_asset/blob/master/loadmore1.gif)
