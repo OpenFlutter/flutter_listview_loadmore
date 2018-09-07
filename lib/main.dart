@@ -38,8 +38,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void load() {
+    print("load");
     setState(() {
       list.addAll(List.generate(15, (v) => v));
+      print("data count = ${list.length}");
     });
   }
 
@@ -64,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               itemCount: count,
             ),
+            whenEmptyLoad: false,
             delegate: DefaultLoadMoreDelegate(),
             textBuilder: DefaultLoadMoreTextBuilder.chinese,
           ),

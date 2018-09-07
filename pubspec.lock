@@ -154,10 +154,10 @@ packages:
   loadmore:
     dependency: "direct main"
     description:
-      name: loadmore
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.0.2"
+      path: loadmore
+      relative: true
+    source: path
+    version: "0.1.1"
   logging:
     dependency: transitive
     description:

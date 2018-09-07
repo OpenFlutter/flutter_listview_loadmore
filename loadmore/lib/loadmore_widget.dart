@@ -14,9 +14,18 @@ class LoadMore extends StatefulWidget {
   ///
   /// return false or null is fail
   final FutureCallBack onLoadMore;
+
+  /// if [isFinish] is true, then loadMoreWidget status is [LoadMoreStatus.nomore].
   final bool isFinish;
+
+  /// see [LoadMoreDelegate]
   final LoadMoreDelegate delegate;
+
+  /// see [LoadMoreTextBuilder]
   final LoadMoreTextBuilder textBuilder;
+
+  /// when [whenEmptyLoad] is true, and when listView children length is 0,or the itemCount is 0,not build loadMoreWidget
+  final bool whenEmptyLoad;
 
   const LoadMore({
     Key key,
@@ -25,6 +34,7 @@ class LoadMore extends StatefulWidget {
     this.textBuilder = DefaultLoadMoreTextBuilder.chinese,
     this.isFinish = false,
     this.delegate = const DefaultLoadMoreDelegate(),
+    this.whenEmptyLoad = true,
   }) : super(key: key);
 
   @override
@@ -61,8 +71,12 @@ class _LoadMoreState extends State<LoadMore> {
   /// so, return a listview and  item count + 1
   Widget _buildListView(ListView listView) {
     var delegate = listView.childrenDelegate;
+    outer:
     if (delegate is SliverChildBuilderDelegate) {
       SliverChildBuilderDelegate delegate = listView.childrenDelegate;
+      if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
+        break outer;
+      }
       var viewCount = delegate.estimatedChildCount + 1;
       IndexedWidgetBuilder builder = (context, index) {
         if (index == viewCount - 1) {
@@ -89,6 +103,11 @@ class _LoadMoreState extends State<LoadMore> {
       );
     } else if (delegate is SliverChildListDelegate) {
       SliverChildListDelegate delegate = listView.childrenDelegate;
+
+      if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
+        break outer;
+      }
+
       delegate.children.add(_buildLoadMoreView());
       return ListView(
         children: delegate.children,
@@ -212,7 +231,7 @@ class DefaultLoadMoreView extends StatefulWidget {
 
 const _defaultLoadMoreHeight = 80.0;
 const _loadmoreIndicatorSize = 33.0;
-const _loadMoreDelay = 100;
+const _loadMoreDelay = 16;
 
 class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
   LoadMoreDelegate get delegate => widget.delegate;
@@ -240,10 +259,18 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
   }
 
   void notify() async {
-    await Future.delayed(delegate.loadMoreDelay());
+    var delay = max(delegate.loadMoreDelay(), Duration(milliseconds: 16));
+    await Future.delayed(delay);
     if (widget.status == LoadMoreStatus.idle) {
       _BuildNotify().dispatch(context);
     }
+  }
+
+  Duration max(Duration duration, Duration duration2) {
+    if (duration > duration2) {
+      return duration;
+    }
+    return duration2;
   }
 }
 
@@ -251,11 +278,14 @@ class _BuildNotify extends Notification {}
 
 class _RetryNotify extends Notification {}
 
+/// loadmore widget properties
 abstract class LoadMoreDelegate {
   const LoadMoreDelegate();
 
+  /// the loadmore widget height
   double widgetHeight(LoadMoreStatus status) => _defaultLoadMoreHeight;
 
+  /// build loadmore delay
   Duration loadMoreDelay() => Duration(milliseconds: _loadMoreDelay);
 
   Widget buildChild(LoadMoreStatus status,

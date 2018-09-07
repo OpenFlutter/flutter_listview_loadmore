@@ -19,7 +19,7 @@ in `pubspec.yaml`
 
 ```
 dependencies:
-  loadmore: ^0.1.1
+  loadmore: ^0.1.2
 ```
 
 import in dartfile:
@@ -71,6 +71,7 @@ onLoadMore: A Function , `typedef Future<bool> FutureCallBack();` ,required , re
 isFinish: bool, if true, then the status will change to finish ,default is false
 delegate: LoadMoreDelegate, see the LoadMoreDelegate class,default is DefaultLoadMoreDelegate
 textBuilder: the result will show in loading view ,if you use default delegate. default is DefaultLoadMoreText.chinese,
+whenEmptyLoad: bool, default is true, when [whenEmptyLoad] is true, and when listView children length is 0,or the itemCount is 0,not build loadMoreWidget.
 ```
 
 ```dart
