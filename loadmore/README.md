@@ -23,7 +23,7 @@ in `pubspec.yaml`
 
 ```
 dependencies:
-  loadmore: ^0.1.3
+  loadmore: ^1.0.1
 ```
 
 import in dartfile:
