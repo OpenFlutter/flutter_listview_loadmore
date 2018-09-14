@@ -157,7 +157,7 @@ packages:
       path: loadmore
       relative: true
     source: path
-    version: "0.1.1"
+    version: "0.1.2"
   logging:
     dependency: transitive
     description:

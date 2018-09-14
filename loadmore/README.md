@@ -1,5 +1,8 @@
 # loadmore
 
+[![pub package](https://img.shields.io/pub/v/loadmore.svg)](https://pub.dartlang.org/packages/loadmore)
+![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)
+
 A loadMore library
 
 only support listview
@@ -11,6 +14,7 @@ only support listview
 ![img](https://github.com/CaiJingLong/some_asset/blob/master/loadmore1.gif)
 
 ## whole example
+
 show https://github.com/CaiJingLong/flutter_listview_loadmore
 
 ## install
@@ -19,15 +23,17 @@ in `pubspec.yaml`
 
 ```
 dependencies:
-  loadmore: ^0.1.2
+  loadmore: ^0.1.3
 ```
 
 import in dartfile:
+
 ```
 import 'package:loadmore/loadmore.dart';
 ```
 
 use in build:
+
 ```dart
   @override
   Widget build(BuildContext context) {
@@ -37,7 +43,7 @@ use in build:
       ),
       body: Container(
         child: LoadMore(
-          isFinish: count >= 60, //
+          isFinish: count >= 60,
           onLoadMore: _loadMore,
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
@@ -49,7 +55,6 @@ use in build:
             },
             itemCount: count,
           ),
-          delegate:,
         ),
       ),
     );
@@ -66,12 +71,12 @@ use in build:
 properties use:
 
 ```
-child: Widget ,required , support ListView ListView.builder ListView.separated, other is not support. 
-onLoadMore: A Function , `typedef Future<bool> FutureCallBack();` ,required , reture true is success and status delay,return false or null ,then the status will change to fail.
-isFinish: bool, if true, then the status will change to finish ,default is false
-delegate: LoadMoreDelegate, see the LoadMoreDelegate class,default is DefaultLoadMoreDelegate
-textBuilder: the result will show in loading view ,if you use default delegate. default is DefaultLoadMoreText.chinese,
-whenEmptyLoad: bool, default is true, when [whenEmptyLoad] is true, and when listView children length is 0,or the itemCount is 0,not build loadMoreWidget.
+child: Widget ,required , support ListView ListView.builder ListView.separated, other is not support.
+onLoadMore:required A Function , `typedef Future<bool> FutureCallBack();` , reture true is success and status delay,return false or null ,then the status will change to fail.
+isFinish: bool, optional, if true, then the status will change to finish ,default is false
+delegate: LoadMoreDelegate,optional, see the LoadMoreDelegate class,default is DefaultLoadMoreDelegate
+textBuilder: optional, the result will show in loading view ,if you use default delegate. default is DefaultLoadMoreText.chinese,
+whenEmptyLoad: bool ,optional, default is true, when [whenEmptyLoad] is true, and when listView children length is 0,or the itemCount is 0,not build loadMoreWidget.
 ```
 
 ```dart
@@ -84,7 +89,6 @@ abstract class LoadMoreDelegate {
 
   Widget buildChild(LoadMoreStatus status); // build your widget in the loadmore widget.
 }
-
 ```
 
 ## other
@@ -92,5 +96,6 @@ abstract class LoadMoreDelegate {
 homePage: https://github.com/CaiJingLong/flutter_listview_loadmore
 emailto me : cjl_spy@163.com
 
-## LICENSE 
+## LICENSE
+
 APACHE 2.0

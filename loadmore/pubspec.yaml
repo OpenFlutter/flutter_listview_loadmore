@@ -1,6 +1,6 @@
 name: loadmore
 description: listview scroll to bottom ,can load more data. help developer paging load data.
-version: 0.1.2
+version: 1.0.0
 author: caijinglong<cjl_spy@163.com>
 email: cjl_spy@163.com
 homepage: https://github.com/CaiJingLong/flutter_listview_loadmore
@@ -17,4 +17,4 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-flutter:
+? flutter
