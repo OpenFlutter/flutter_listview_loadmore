@@ -1,7 +1,7 @@
 # loadmore
 
 [![pub package](https://img.shields.io/pub/v/loadmore.svg)](https://pub.dartlang.org/packages/loadmore)
-![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)
+[![GitHub](https://img.shields.io/github/license/OpenFlutter/flutter_listview_loadmore.svg)](https://github.com/OpenFlutter/flutter_listview_loadmore/tree/master/loadmore)
 
 A loadMore library
 
