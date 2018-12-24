@@ -1,3 +1,9 @@
+# CHANGELOG
+
+## [1.0.2]
+
+add global params to set delegate and textBuilder
+
 ## [1.0.1]
 
 update readme
