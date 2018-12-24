@@ -1,3 +1,3 @@
 library loadmore;
 
-export 'loadmore_widget.dart' hide DefaultLoadMoreViewState;
+export 'src/loadmore_widget.dart' hide DefaultLoadMoreViewState;

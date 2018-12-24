@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 typedef Future<bool> FutureCallBack();
 
 class LoadMore extends StatefulWidget {
+  static DelegateBuilder<LoadMoreDelegate> buildDelegate = () => DefaultLoadMoreDelegate();
+  static DelegateBuilder<LoadMoreTextBuilder> buildTextBuilder = () => DefaultLoadMoreTextBuilder.chinese;
+
   final Widget child;
 
   /// return true is refresh success
@@ -31,9 +34,9 @@ class LoadMore extends StatefulWidget {
     Key key,
     @required this.child,
     @required this.onLoadMore,
-    this.textBuilder = DefaultLoadMoreTextBuilder.chinese,
+    this.textBuilder,
     this.isFinish = false,
-    this.delegate = const DefaultLoadMoreDelegate(),
+    this.delegate,
     this.whenEmptyLoad = true,
   }) : super(key: key);
 
@@ -44,7 +47,7 @@ class LoadMore extends StatefulWidget {
 class _LoadMoreState extends State<LoadMore> {
   Widget get child => widget.child;
 
-  LoadMoreDelegate get loadMoreDelegate => widget.delegate;
+  LoadMoreDelegate get loadMoreDelegate => widget.delegate ?? LoadMore.buildDelegate();
 
   @override
   void initState() {
@@ -143,7 +146,7 @@ class _LoadMoreState extends State<LoadMore> {
         child: DefaultLoadMoreView(
           status: status,
           delegate: loadMoreDelegate,
-          textBuilder: widget.textBuilder,
+          textBuilder: widget.textBuilder ?? LoadMore.buildTextBuilder(),
         ),
         onNotification: _onLoadMoreBuild,
       ),
@@ -242,8 +245,7 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        if (widget.status == LoadMoreStatus.fail ||
-            widget.status == LoadMoreStatus.idle) {
+        if (widget.status == LoadMoreStatus.fail || widget.status == LoadMoreStatus.idle) {
           _RetryNotify().dispatch(context);
         }
       },
@@ -278,8 +280,12 @@ class _BuildNotify extends Notification {}
 
 class _RetryNotify extends Notification {}
 
+typedef T DelegateBuilder<T>();
+
 /// loadmore widget properties
 abstract class LoadMoreDelegate {
+  static DelegateBuilder<LoadMoreDelegate> buildWidget = () => DefaultLoadMoreDelegate();
+
   const LoadMoreDelegate();
 
   /// the loadmore widget height
@@ -288,16 +294,14 @@ abstract class LoadMoreDelegate {
   /// build loadmore delay
   Duration loadMoreDelay() => Duration(milliseconds: _loadMoreDelay);
 
-  Widget buildChild(LoadMoreStatus status,
-      {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese});
+  Widget buildChild(LoadMoreStatus status, {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese});
 }
 
 class DefaultLoadMoreDelegate extends LoadMoreDelegate {
   const DefaultLoadMoreDelegate();
 
   @override
-  Widget buildChild(LoadMoreStatus status,
-      {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese}) {
+  Widget buildChild(LoadMoreStatus status, {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese}) {
     String text = builder(status);
     if (status == LoadMoreStatus.fail) {
       return Container(
