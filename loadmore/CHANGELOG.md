@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [1.0.3]
+
+fix state error
+
 ## [1.0.2]
 
 add global params to set delegate and textBuilder
