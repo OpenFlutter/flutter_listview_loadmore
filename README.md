@@ -60,8 +60,8 @@ use in build:
     );
   }
 
-  Future<bool> _loadMore() async {
-    print("onLoadMore");
+  Future<bool> _loadMore(int nextPage) async {
+    print("onLoadMore: page $nextPage");
     await Future.delayed(Duration(seconds: 0, milliseconds: 100));
     load();
     return true;

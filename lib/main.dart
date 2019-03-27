@@ -69,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
             whenEmptyLoad: false,
             delegate: DefaultLoadMoreDelegate(),
             textBuilder: DefaultLoadMoreTextBuilder.chinese,
+            initialPage: 0,
           ),
           onRefresh: _refresh,
         ),
@@ -76,8 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<bool> _loadMore() async {
-    print("onLoadMore");
+  Future<bool> _loadMore(int page) async {
+    print("onLoadMore: load page $page");
     await Future.delayed(Duration(seconds: 0, milliseconds: 2000));
     load();
     return true;

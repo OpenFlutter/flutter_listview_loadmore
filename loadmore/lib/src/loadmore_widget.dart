@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// return true is refresh success
 ///
 /// return false or null is fail
-typedef Future<bool> FutureCallBack();
+typedef FutureCallBack = Future<bool> Function(int nextPage);
 
 class LoadMore extends StatefulWidget {
   static DelegateBuilder<LoadMoreDelegate> buildDelegate =
@@ -32,6 +32,9 @@ class LoadMore extends StatefulWidget {
   /// when [whenEmptyLoad] is true, and when listView children length is 0,or the itemCount is 0,not build loadMoreWidget
   final bool whenEmptyLoad;
 
+  /// this define the page that's will be the first, this is used to increment the page on [onLoadMore]
+  final int initialPage;
+
   const LoadMore({
     Key key,
     @required this.child,
@@ -40,6 +43,7 @@ class LoadMore extends StatefulWidget {
     this.isFinish = false,
     this.delegate,
     this.whenEmptyLoad = true,
+    this.initialPage = 1,
   }) : super(key: key);
 
   @override
@@ -52,9 +56,12 @@ class _LoadMoreState extends State<LoadMore> {
   LoadMoreDelegate get loadMoreDelegate =>
       widget.delegate ?? LoadMore.buildDelegate();
 
+  int page;
+
   @override
   void initState() {
     super.initState();
+    page = widget.initialPage;
   }
 
   @override
@@ -186,7 +193,7 @@ class _LoadMoreState extends State<LoadMore> {
 
   void loadMore() {
     _updateStatus(LoadMoreStatus.loading);
-    widget.onLoadMore().then((v) {
+    widget.onLoadMore(++page).then((v) {
       if (v == true) {
         // 成功，切换状态为空闲
         _updateStatus(LoadMoreStatus.idle);
