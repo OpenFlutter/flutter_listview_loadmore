@@ -1,5 +1,6 @@
 # loadmore
 
+[![loadmore](https://img.shields.io/badge/OpenFlutter-LoadMore-blue.svg)](https://github.com/OpenFlutter/flutter_listview_loadmore)
 [![pub package](https://img.shields.io/pub/v/loadmore.svg)](https://pub.dartlang.org/packages/loadmore)
 [![GitHub](https://img.shields.io/github/license/OpenFlutter/flutter_listview_loadmore.svg)](https://github.com/OpenFlutter/flutter_listview_loadmore/tree/master/loadmore)
 
