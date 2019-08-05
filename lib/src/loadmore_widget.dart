@@ -13,6 +13,7 @@ class LoadMore extends StatefulWidget {
   static DelegateBuilder<LoadMoreTextBuilder> buildTextBuilder =
       () => DefaultLoadMoreTextBuilder.chinese;
 
+  /// Only support [ListView],[SliverList]
   final Widget child;
 
   /// return true is refresh success
@@ -69,6 +70,9 @@ class _LoadMoreState extends State<LoadMore> {
     }
     if (child is ListView) {
       return _buildListView(child);
+    }
+    if (child is SliverList) {
+      return _buildSliverList(child);
     }
     return child;
   }
@@ -132,6 +136,65 @@ class _LoadMoreState extends State<LoadMore> {
       );
     }
     return listView;
+  }
+
+  Widget _buildSliverList(SliverList list) {
+    final delegate = list.delegate;
+    if (delegate == null) {
+      return list;
+    }
+
+    if (delegate is SliverChildListDelegate) {
+      return SliverList(
+        delegate: null,
+      );
+    }
+
+    outer:
+    if (delegate is SliverChildBuilderDelegate) {
+      if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
+        break outer;
+      }
+      final viewCount = delegate.estimatedChildCount + 1;
+      IndexedWidgetBuilder builder = (context, index) {
+        if (index == viewCount - 1) {
+          return _buildLoadMoreView();
+        }
+        return delegate.builder(context, index);
+      };
+
+      return SliverList(
+        delegate: SliverChildBuilderDelegate(
+          builder,
+          addAutomaticKeepAlives: delegate.addAutomaticKeepAlives,
+          addRepaintBoundaries: delegate.addRepaintBoundaries,
+          addSemanticIndexes: delegate.addSemanticIndexes,
+          childCount: viewCount,
+          semanticIndexCallback: delegate.semanticIndexCallback,
+          semanticIndexOffset: delegate.semanticIndexOffset,
+        ),
+      );
+    }
+
+    outer:
+    if (delegate is SliverChildListDelegate) {
+      if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
+        break outer;
+      }
+      delegate.children.add(_buildLoadMoreView());
+      return SliverList(
+        delegate: SliverChildListDelegate(
+          delegate.children,
+          addAutomaticKeepAlives: delegate.addAutomaticKeepAlives,
+          addRepaintBoundaries: delegate.addRepaintBoundaries,
+          addSemanticIndexes: delegate.addSemanticIndexes,
+          semanticIndexCallback: delegate.semanticIndexCallback,
+          semanticIndexOffset: delegate.semanticIndexOffset,
+        ),
+      );
+    }
+
+    return list;
   }
 
   LoadMoreStatus status = LoadMoreStatus.idle;
