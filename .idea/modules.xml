@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/loadmore.iml" filepath="$PROJECT_DIR$/loadmore.iml" />
-      <module fileurl="file://$PROJECT_DIR$/loadmore_android.iml" filepath="$PROJECT_DIR$/loadmore_android.iml" />
     </modules>
   </component>
 </project>

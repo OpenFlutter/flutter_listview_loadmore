@@ -29,13 +29,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.14.11"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.1.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -46,13 +39,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  loadmore:
-    dependency: "direct main"
-    description:
-      path: loadmore
-      relative: true
-    source: path
-    version: "1.0.2"
   matcher:
     dependency: transitive
     description:
