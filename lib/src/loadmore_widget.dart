@@ -99,6 +99,9 @@ class _LoadMoreState extends State<LoadMore> {
         itemBuilder: builder,
         addAutomaticKeepAlives: delegate.addAutomaticKeepAlives,
         addRepaintBoundaries: delegate.addRepaintBoundaries,
+        addSemanticIndexes: delegate.addSemanticIndexes,
+        dragStartBehavior: listView.dragStartBehavior,
+        semanticChildCount: listView.semanticChildCount,
         itemCount: viewCount,
         cacheExtent: listView.cacheExtent,
         controller: listView.controller,
@@ -133,6 +136,9 @@ class _LoadMoreState extends State<LoadMore> {
         reverse: listView.reverse,
         scrollDirection: listView.scrollDirection,
         shrinkWrap: listView.shrinkWrap,
+        addSemanticIndexes: delegate.addSemanticIndexes,
+        dragStartBehavior: listView.dragStartBehavior,
+        semanticChildCount: listView.semanticChildCount,
       );
     }
     return listView;

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [1.0.4]
+
+- Support `SliverList`.
+
 ## [1.0.3]
 
 fix state error
