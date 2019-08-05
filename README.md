@@ -5,7 +5,7 @@
 
 A loadMore library
 
-only support listview
+Support `ListView` and `SliverList`
 
 [中文构思思路和使用说明可以看简书](https://www.jianshu.com/p/abfd6f525316)
 
@@ -21,14 +21,14 @@ show https://github.com/CaiJingLong/flutter_listview_loadmore
 
 in `pubspec.yaml`
 
-```
+```yaml
 dependencies:
-  loadmore: ^1.0.3
+  loadmore: ^1.0.4
 ```
 
 import in dartfile:
 
-```
+```dart
 import 'package:loadmore/loadmore.dart';
 ```
 
@@ -70,7 +70,7 @@ use in build:
 
 properties use:
 
-```
+```properties
 child: Widget ,required , support ListView ListView.builder ListView.separated, other is not support.
 onLoadMore:required A Function , `typedef Future<bool> FutureCallBack();` , reture true is success and status delay,return false or null ,then the status will change to fail.
 isFinish: bool, optional, if true, then the status will change to finish ,default is false
