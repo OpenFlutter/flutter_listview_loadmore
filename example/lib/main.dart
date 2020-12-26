@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void initState() {
     super.initState();
-    // list.addAll(List.generate(30, (v) => v));
+    list.addAll(List.generate(30, (v) => v));
   }
 
   void load() {

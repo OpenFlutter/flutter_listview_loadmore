@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-/// return true is refresh success
+/// return true if refresh success
 ///
 /// return false or null is fail
 typedef Future<bool> FutureCallBack();
@@ -52,16 +52,6 @@ class _LoadMoreState extends State<LoadMore> {
 
   LoadMoreDelegate get loadMoreDelegate =>
       widget.delegate ?? LoadMore.buildDelegate();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
