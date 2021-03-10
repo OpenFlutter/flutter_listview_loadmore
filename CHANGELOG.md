@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [2.0.0]
+
+Null safety version.
+
 ## [1.0.4]
 
 - Support `SliverList`.
