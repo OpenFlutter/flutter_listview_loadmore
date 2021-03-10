@@ -25,18 +25,18 @@ class LoadMore extends StatefulWidget {
   final bool isFinish;
 
   /// see [LoadMoreDelegate]
-  final LoadMoreDelegate delegate;
+  final LoadMoreDelegate? delegate;
 
   /// see [LoadMoreTextBuilder]
-  final LoadMoreTextBuilder textBuilder;
+  final LoadMoreTextBuilder? textBuilder;
 
   /// when [whenEmptyLoad] is true, and when listView children length is 0,or the itemCount is 0,not build loadMoreWidget
   final bool whenEmptyLoad;
 
   const LoadMore({
-    Key key,
-    @required this.child,
-    @required this.onLoadMore,
+    Key? key,
+    required this.child,
+    required this.onLoadMore,
     this.textBuilder,
     this.isFinish = false,
     this.delegate,
@@ -65,34 +65,32 @@ class _LoadMoreState extends State<LoadMore> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.onLoadMore == null) {
-      return child;
-    }
     if (child is ListView) {
-      return _buildListView(child);
+      return _buildListView(child as ListView) ?? Container();
     }
     if (child is SliverList) {
-      return _buildSliverList(child);
+      return _buildSliverList(child as SliverList);
     }
     return child;
   }
 
   /// if call the method, then the future is not null
   /// so, return a listview and  item count + 1
-  Widget _buildListView(ListView listView) {
+  Widget? _buildListView(ListView listView) {
     var delegate = listView.childrenDelegate;
     outer:
     if (delegate is SliverChildBuilderDelegate) {
-      SliverChildBuilderDelegate delegate = listView.childrenDelegate;
+      SliverChildBuilderDelegate delegate =
+          listView.childrenDelegate as SliverChildBuilderDelegate;
       if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
         break outer;
       }
-      var viewCount = delegate.estimatedChildCount + 1;
+      var viewCount = delegate.estimatedChildCount ?? 0 + 1;
       IndexedWidgetBuilder builder = (context, index) {
         if (index == viewCount - 1) {
           return _buildLoadMoreView();
         }
-        return delegate.builder(context, index);
+        return delegate.builder(context, index) ?? Container();
       };
 
       return ListView.builder(
@@ -115,7 +113,8 @@ class _LoadMoreState extends State<LoadMore> {
         shrinkWrap: listView.shrinkWrap,
       );
     } else if (delegate is SliverChildListDelegate) {
-      SliverChildListDelegate delegate = listView.childrenDelegate;
+      SliverChildListDelegate delegate =
+          listView.childrenDelegate as SliverChildListDelegate;
 
       if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
         break outer;
@@ -146,13 +145,10 @@ class _LoadMoreState extends State<LoadMore> {
 
   Widget _buildSliverList(SliverList list) {
     final delegate = list.delegate;
-    if (delegate == null) {
-      return list;
-    }
 
     if (delegate is SliverChildListDelegate) {
       return SliverList(
-        delegate: null,
+        delegate: delegate,
       );
     }
 
@@ -161,12 +157,12 @@ class _LoadMoreState extends State<LoadMore> {
       if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
         break outer;
       }
-      final viewCount = delegate.estimatedChildCount + 1;
+      final viewCount = delegate.estimatedChildCount ?? 0 + 1;
       IndexedWidgetBuilder builder = (context, index) {
         if (index == viewCount - 1) {
           return _buildLoadMoreView();
         }
-        return delegate.builder(context, index);
+        return delegate.builder(context, index) ?? Container();
       };
 
       return SliverList(
@@ -294,10 +290,10 @@ class DefaultLoadMoreView extends StatefulWidget {
   final LoadMoreDelegate delegate;
   final LoadMoreTextBuilder textBuilder;
   const DefaultLoadMoreView({
-    Key key,
+    Key? key,
     this.status = LoadMoreStatus.idle,
-    @required this.delegate,
-    @required this.textBuilder,
+    required this.delegate,
+    required this.textBuilder,
   }) : super(key: key);
 
   @override
