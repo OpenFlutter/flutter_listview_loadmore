@@ -85,7 +85,7 @@ class _LoadMoreState extends State<LoadMore> {
       if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
         break outer;
       }
-      var viewCount = delegate.estimatedChildCount ?? 0 + 1;
+      var viewCount = (delegate.estimatedChildCount ?? 0) + 1;
       IndexedWidgetBuilder builder = (context, index) {
         if (index == viewCount - 1) {
           return _buildLoadMoreView();
@@ -157,7 +157,7 @@ class _LoadMoreState extends State<LoadMore> {
       if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
         break outer;
       }
-      final viewCount = delegate.estimatedChildCount ?? 0 + 1;
+      final viewCount = (delegate.estimatedChildCount ?? 0) + 1;
       IndexedWidgetBuilder builder = (context, index) {
         if (index == viewCount - 1) {
           return _buildLoadMoreView();

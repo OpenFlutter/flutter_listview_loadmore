@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [2.0.1]
+
+Fix error.
+
 ## [2.0.0]
 
 Null safety version.
