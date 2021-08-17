@@ -81,7 +81,7 @@ class _LoadMoreState extends State<LoadMore> {
     outer:
     if (delegate is SliverChildBuilderDelegate) {
       SliverChildBuilderDelegate delegate =
-          listView.childrenDelegate as SliverChildBuilderDelegate;
+      listView.childrenDelegate as SliverChildBuilderDelegate;
       if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
         break outer;
       }
@@ -114,7 +114,7 @@ class _LoadMoreState extends State<LoadMore> {
       );
     } else if (delegate is SliverChildListDelegate) {
       SliverChildListDelegate delegate =
-          listView.childrenDelegate as SliverChildListDelegate;
+      listView.childrenDelegate as SliverChildListDelegate;
 
       if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
         break outer;
@@ -309,7 +309,7 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
 
   @override
   Widget build(BuildContext context) {
-    notify();
+    notify(context);
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -329,10 +329,10 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
     );
   }
 
-  void notify() async {
+  void notify(BuildContext context) async {
     var delay = max(delegate.loadMoreDelay(), Duration(milliseconds: 16));
     await Future.delayed(delay);
-    if (widget.status == LoadMoreStatus.idle) {
+    if (widget.status == LoadMoreStatus.idle && mounted) {
       _BuildNotify().dispatch(context);
     }
   }
