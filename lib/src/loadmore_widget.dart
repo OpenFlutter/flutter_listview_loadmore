@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// return true is refresh success
 ///
 /// return false or null is fail
-typedef Future<bool> FutureCallBack();
+typedef Future<bool> FutureCallBack({bool isRetry});
 
 class LoadMore extends StatefulWidget {
   static DelegateBuilder<LoadMoreDelegate> buildDelegate =
@@ -245,13 +245,13 @@ class _LoadMoreState extends State<LoadMore> {
   }
 
   bool _onRetry(_RetryNotify notification) {
-    loadMore();
+    loadMore(isRetry: true);
     return false;
   }
 
-  void loadMore() {
+  void loadMore({bool isRetry = false}) {
     _updateStatus(LoadMoreStatus.loading);
-    widget.onLoadMore().then((v) {
+    widget.onLoadMore(isRetry: isRetry).then((v) {
       if (v == true) {
         // 成功，切换状态为空闲
         _updateStatus(LoadMoreStatus.idle);
