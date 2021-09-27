@@ -322,6 +322,7 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
         height: delegate.widgetHeight(widget.status),
         alignment: Alignment.center,
         child: delegate.buildChild(
+          context,
           widget.status,
           builder: widget.textBuilder,
         ),
@@ -364,16 +365,22 @@ abstract class LoadMoreDelegate {
   /// build loadmore delay
   Duration loadMoreDelay() => Duration(milliseconds: _loadMoreDelay);
 
-  Widget buildChild(LoadMoreStatus status,
-      {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese});
+  Widget buildChild(
+    BuildContext context,
+    LoadMoreStatus status, {
+    LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese,
+  });
 }
 
 class DefaultLoadMoreDelegate extends LoadMoreDelegate {
   const DefaultLoadMoreDelegate();
 
   @override
-  Widget buildChild(LoadMoreStatus status,
-      {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese}) {
+  Widget buildChild(
+    BuildContext context,
+    LoadMoreStatus status, {
+    LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese,
+  }) {
     String text = builder(status);
     if (status == LoadMoreStatus.fail) {
       return Container(
