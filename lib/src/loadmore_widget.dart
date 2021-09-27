@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// return true is refresh success
 ///
 /// return false or null is fail
-typedef Future<bool> FutureCallBack({bool isRetry});
+typedef Future<bool> FutureCallBack();
 
 class LoadMore extends StatefulWidget {
   static DelegateBuilder<LoadMoreDelegate> buildDelegate =
@@ -245,13 +245,13 @@ class _LoadMoreState extends State<LoadMore> {
   }
 
   bool _onRetry(_RetryNotify notification) {
-    loadMore(isRetry: true);
+    loadMore();
     return false;
   }
 
-  void loadMore({bool isRetry = false}) {
+  void loadMore() {
     _updateStatus(LoadMoreStatus.loading);
-    widget.onLoadMore(isRetry: isRetry).then((v) {
+    widget.onLoadMore().then((v) {
       if (v == true) {
         // 成功，切换状态为空闲
         _updateStatus(LoadMoreStatus.idle);
@@ -322,6 +322,7 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
         height: delegate.widgetHeight(widget.status),
         alignment: Alignment.center,
         child: delegate.buildChild(
+          context,
           widget.status,
           builder: widget.textBuilder,
         ),
@@ -364,16 +365,22 @@ abstract class LoadMoreDelegate {
   /// build loadmore delay
   Duration loadMoreDelay() => Duration(milliseconds: _loadMoreDelay);
 
-  Widget buildChild(LoadMoreStatus status,
-      {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese});
+  Widget buildChild(
+    BuildContext context,
+    LoadMoreStatus status, {
+    LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese,
+  });
 }
 
 class DefaultLoadMoreDelegate extends LoadMoreDelegate {
   const DefaultLoadMoreDelegate();
 
   @override
-  Widget buildChild(LoadMoreStatus status,
-      {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese}) {
+  Widget buildChild(
+    BuildContext context,
+    LoadMoreStatus status, {
+    LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese,
+  }) {
     String text = builder(status);
     if (status == LoadMoreStatus.fail) {
       return Container(
