@@ -456,8 +456,31 @@ String _buildEnglishText(LoadMoreStatus status) {
   return text;
 }
 
+String _buildArabicText(LoadMoreStatus status) {
+  String text;
+  switch (status) {
+    case LoadMoreStatus.fail:
+      text = "فشل التحميل, يرجى المحاولة مرة أخرى";
+      break;
+    case LoadMoreStatus.idle:
+      text = "جاري الانتظار...";
+      break;
+    case LoadMoreStatus.loading:
+      text = "جاري التحميل...";
+      break;
+    case LoadMoreStatus.nomore:
+      text = "لا يوجد المزيد من البيانات";
+      break;
+    default:
+      text = "";
+  }
+  return text;
+}
+
 class DefaultLoadMoreTextBuilder {
   static const LoadMoreTextBuilder chinese = _buildChineseText;
 
   static const LoadMoreTextBuilder english = _buildEnglishText;
+
+  static const LoadMoreTextBuilder arabic = _buildArabicText;
 }
