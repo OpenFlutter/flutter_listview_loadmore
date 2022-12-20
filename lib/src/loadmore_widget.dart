@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
 
 /// return true is refresh success
@@ -71,7 +72,35 @@ class _LoadMoreState extends State<LoadMore> {
     if (child is SliverList) {
       return _buildSliverList(child as SliverList);
     }
+    if (child is DraggableScrollbar) {
+      return _buildDraggableScrollbar(child as DraggableScrollbar) ?? Container();
+    }
     return child;
+  }
+
+  /// build [ListView] which is wrapped inside [DraggableScrollbar]
+  Widget? _buildDraggableScrollbar(DraggableScrollbar scrollbar) {
+    final child = scrollbar.child;
+    if (child is ListView) {
+      final listView = _buildListView(child);
+      if (listView != null && listView is ListView) {
+        return DraggableScrollbar(
+          key: scrollbar.key,
+          alwaysVisibleScrollThumb: scrollbar.alwaysVisibleScrollThumb,
+          backgroundColor: scrollbar.backgroundColor,
+          controller: scrollbar.controller,
+          heightScrollThumb: scrollbar.heightScrollThumb,
+          padding: scrollbar.padding,
+          scrollThumbBuilder: scrollbar.scrollThumbBuilder,
+          labelTextBuilder: scrollbar.labelTextBuilder,
+          labelConstraints: scrollbar.labelConstraints,
+          scrollbarAnimationDuration: scrollbar.scrollbarAnimationDuration,
+          scrollbarTimeToFade: scrollbar.scrollbarTimeToFade,
+          child: listView,
+        );
+      }
+    }
+    return null;
   }
 
   /// if call the method, then the future is not null

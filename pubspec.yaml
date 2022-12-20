@@ -10,6 +10,7 @@ environment:
   flutter: ">=2.0.0"
 
 dependencies:
+  draggable_scrollbar: ^0.1.0
   flutter:
     sdk: flutter
 
