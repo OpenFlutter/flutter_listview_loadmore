@@ -91,6 +91,82 @@ abstract class LoadMoreDelegate {
 }
 ```
 
+create your CustomLoadMoreDelegate:
+
+```dart
+class CustomLoadMoreDelegate extends LoadMoreDelegate {
+  const CustomLoadMoreDelegate();
+
+  @override
+  Widget buildChild(LoadMoreStatus status,
+      {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.english}) {
+    String text = builder(status);
+    if (status == LoadMoreStatus.fail) {
+      return Text(
+        'Failed to load data',
+        style: TextStyle(
+            color: Colors.red,
+            fontSize: 16.0
+        ),
+      );
+    }
+    if (status == LoadMoreStatus.idle) {
+      return Text(
+        'Idle',
+        style: TextStyle(
+            color: Colors.blue,
+            fontSize: 16.0
+        ),
+      );
+    }
+    if (status == LoadMoreStatus.loading) {
+      return Container(
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              width: 20.0,
+              height: 20.0,
+              child: const CircularProgressIndicator(
+                backgroundColor: Colors.green,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Loading....',
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 16.0
+                ),
+              )
+            ),
+          ],
+        ),
+      );
+    }
+    if (status == LoadMoreStatus.nomore) {
+      return Text(
+        'No more data fetched',
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 16.0
+        ),
+      );
+    }
+
+    return Text(
+      text,
+      style: TextStyle(
+          color: Colors.blue,
+          fontSize: 16.0
+      ),
+    );
+  }
+}
+```
+
 ## other
 
 homePage: https://github.com/CaiJingLong/flutter_listview_loadmore
