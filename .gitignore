@@ -9,3 +9,7 @@ ios/.generated/
 ios/Flutter/Generated.xcconfig
 ios/Runner/GeneratedPluginRegistrant.*
 .env
+
+pubspec.lock
+
+.vscode/settings.json
