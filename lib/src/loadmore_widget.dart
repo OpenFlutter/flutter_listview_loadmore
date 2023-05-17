@@ -66,13 +66,27 @@ class _LoadMoreState extends State<LoadMore> {
   @override
   Widget build(BuildContext context) {
     if (child is ListView) {
-      return _buildListView(child as ListView) ?? Container();
+      return ValueListenableBuilder(
+        valueListenable: _loadMoreStatus,
+        builder: (context, value, child) {
+          return _buildListView(widget.child as ListView) ?? Container();
+        },
+      );
     }
     if (child is SliverList) {
-      return _buildSliverList(child as SliverList);
+      return ValueListenableBuilder(
+        valueListenable: _loadMoreStatus,
+        builder: (context, value, child) {
+          return _buildSliverList(widget.child as SliverList);
+        },
+      );
     }
     return child;
   }
+
+  ValueNotifier<LoadMoreStatus> _loadMoreStatus =
+      ValueNotifier(LoadMoreStatus.idle);
+  LoadMoreStatus get status => _loadMoreStatus.value;
 
   /// if call the method, then the future is not null
   /// so, return a listview and  item count + 1
@@ -199,27 +213,55 @@ class _LoadMoreState extends State<LoadMore> {
     return list;
   }
 
-  LoadMoreStatus status = LoadMoreStatus.idle;
-
   Widget _buildLoadMoreView() {
     if (widget.isFinish == true) {
-      this.status = LoadMoreStatus.nomore;
+      _updateStatus(LoadMoreStatus.nomore);
     } else {
       if (this.status == LoadMoreStatus.nomore) {
-        this.status = LoadMoreStatus.idle;
+        _updateStatus(LoadMoreStatus.idle);
       }
     }
     return NotificationListener<_RetryNotify>(
       child: NotificationListener<_BuildNotify>(
-        child: DefaultLoadMoreView(
-          status: status,
-          delegate: loadMoreDelegate,
-          textBuilder: widget.textBuilder ?? LoadMore.buildTextBuilder(),
+        child: NotificationListener<ScrollNotification>(
+          onNotification: _handleScrollNotification,
+          child: DefaultLoadMoreView(
+            status: status,
+            delegate: loadMoreDelegate,
+            textBuilder: widget.textBuilder ?? LoadMore.buildTextBuilder(),
+          ),
         ),
         onNotification: _onLoadMoreBuild,
       ),
       onNotification: _onRetry,
     );
+  }
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    final widgetHeight = loadMoreDelegate.widgetHeight(status);
+    // 当底部剩余高度小于 widgetHeight 时，触发加载更多
+    if (notification.metrics.extentAfter < widgetHeight) {
+      if (status == LoadMoreStatus.loading) {
+        return false;
+      }
+      if (status == LoadMoreStatus.nomore) {
+        return false;
+      }
+      if (status == LoadMoreStatus.fail) {
+        return false;
+      }
+      if (status == LoadMoreStatus.outScreen) {
+        return false;
+      }
+      if (status == LoadMoreStatus.idle) {
+        // 切换状态为加载中，并且触发回调
+        loadMore();
+      }
+    } else {
+      _updateStatus(LoadMoreStatus.outScreen);
+    }
+
+    return false;
   }
 
   bool _onLoadMoreBuild(_BuildNotify notification) {
@@ -233,6 +275,9 @@ class _LoadMoreState extends State<LoadMore> {
     if (status == LoadMoreStatus.fail) {
       return false;
     }
+    if (status == LoadMoreStatus.outScreen) {
+      return false;
+    }
     if (status == LoadMoreStatus.idle) {
       // 切换状态为加载中，并且触发回调
       loadMore();
@@ -241,7 +286,9 @@ class _LoadMoreState extends State<LoadMore> {
   }
 
   void _updateStatus(LoadMoreStatus status) {
-    if (mounted) setState(() => this.status = status);
+    Future.delayed(Duration.zero, () {
+      _loadMoreStatus.value = status;
+    });
   }
 
   bool _onRetry(_RetryNotify notification) {
@@ -269,6 +316,11 @@ enum LoadMoreStatus {
   /// wait for loading
   idle,
 
+  /// 不在屏幕中，不应该继续加载
+  ///
+  /// not in screen
+  outScreen,
+
   /// 刷新中，不应该继续加载，等待future返回
   ///
   /// the view is loading
@@ -289,6 +341,7 @@ class DefaultLoadMoreView extends StatefulWidget {
   final LoadMoreStatus status;
   final LoadMoreDelegate delegate;
   final LoadMoreTextBuilder textBuilder;
+
   const DefaultLoadMoreView({
     Key? key,
     this.status = LoadMoreStatus.idle,
@@ -315,7 +368,9 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
       onTap: () {
         if (widget.status == LoadMoreStatus.fail ||
             widget.status == LoadMoreStatus.idle) {
-          _RetryNotify().dispatch(context);
+          if (mounted) {
+            _RetryNotify().dispatch(context);
+          }
         }
       },
       child: Container(
@@ -333,7 +388,9 @@ class DefaultLoadMoreViewState extends State<DefaultLoadMoreView> {
     var delay = max(delegate.loadMoreDelay(), Duration(milliseconds: 16));
     await Future.delayed(delay);
     if (widget.status == LoadMoreStatus.idle) {
-      _BuildNotify().dispatch(context);
+      if (mounted) {
+        _BuildNotify().dispatch(context);
+      }
     }
   }
 
@@ -364,8 +421,10 @@ abstract class LoadMoreDelegate {
   /// build loadmore delay
   Duration loadMoreDelay() => Duration(milliseconds: _loadMoreDelay);
 
-  Widget buildChild(LoadMoreStatus status,
-      {LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese});
+  Widget buildChild(
+    LoadMoreStatus status, {
+    LoadMoreTextBuilder builder = DefaultLoadMoreTextBuilder.chinese,
+  });
 }
 
 class DefaultLoadMoreDelegate extends LoadMoreDelegate {

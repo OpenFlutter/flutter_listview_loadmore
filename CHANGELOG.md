@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [2.1.0]
+
+- Add new value for LoadMoreStatus.
+
 ## [2.0.1]
 
 Fix error.
