@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ListViewDemoPage extends StatefulWidget {
+  const ListViewDemoPage({Key? key}) : super(key: key);
+
   @override
-  _ListViewDemoPageState createState() => _ListViewDemoPageState();
+  State<ListViewDemoPage> createState() => _ListViewDemoPageState();
 }
 
 class _ListViewDemoPageState extends State<ListViewDemoPage> {
@@ -18,7 +20,7 @@ class _ListViewDemoPageState extends State<ListViewDemoPage> {
 
   Widget _buildItem(BuildContext context, int index) {
     if (index == count) {
-      return Text('到底了');
+      return const Text('到底了');
     }
     return Text(index.toString());
   }
