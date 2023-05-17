@@ -3,18 +3,19 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:loadmore/loadmore.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      theme: new ThemeData(
+      theme: ThemeData(
         primarySwatch: Colors.red,
+        platform: TargetPlatform.iOS,
       ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -27,7 +28,7 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -43,16 +44,16 @@ class _MyHomePageState extends State<MyHomePage> {
   void load() {
     print("load");
     setState(() {
-      list.addAll(List.generate(15, (v) => v));
+      list.addAll(List.generate(5, (v) => v));
       print("data count = ${list.length}");
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
       body: Container(
         child: RefreshIndicator(
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               itemCount: count,
             ),
-            whenEmptyLoad: false,
+            whenEmptyLoad: true,
             delegate: DefaultLoadMoreDelegate(),
             textBuilder: DefaultLoadMoreTextBuilder.chinese,
           ),
