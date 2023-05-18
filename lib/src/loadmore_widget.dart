@@ -1,5 +1,5 @@
 import 'dart:async';
-
+// !  TESTANDO MATHEUS
 import 'package:flutter/material.dart';
 
 /// return true is refresh success
@@ -451,9 +451,7 @@ class DefaultLoadMoreDelegate extends LoadMoreDelegate {
             SizedBox(
               width: _loadmoreIndicatorSize,
               height: _loadmoreIndicatorSize,
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.blue,
-              ),
+              
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -477,16 +475,16 @@ String _buildChineseText(LoadMoreStatus status) {
   String text;
   switch (status) {
     case LoadMoreStatus.fail:
-      text = "加载失败，请点击重试";
+      text = "";
       break;
     case LoadMoreStatus.idle:
-      text = "等待加载更多";
+      text = "";
       break;
     case LoadMoreStatus.loading:
-      text = "加载中，请稍候...";
+      text = "";
       break;
     case LoadMoreStatus.nomore:
-      text = "到底了，别扯了";
+      text = "";
       break;
     default:
       text = "";
@@ -498,16 +496,16 @@ String _buildEnglishText(LoadMoreStatus status) {
   String text;
   switch (status) {
     case LoadMoreStatus.fail:
-      text = "load fail, tap to retry";
+      text = "";
       break;
     case LoadMoreStatus.idle:
-      text = "wait for loading";
+      text = "";
       break;
     case LoadMoreStatus.loading:
-      text = "loading, wait for moment ...";
+      text = "";
       break;
     case LoadMoreStatus.nomore:
-      text = "no more data";
+      text = "";
       break;
     default:
       text = "";
