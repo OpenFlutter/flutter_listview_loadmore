@@ -9,15 +9,15 @@ Support `ListView` and `SliverList`
 
 [中文构思思路和使用说明可以看简书](https://www.jianshu.com/p/abfd6f525316)
 
-## screenshot
+## Screenshot
 
 ![img](https://github.com/CaiJingLong/some_asset/blob/master/loadmore1.gif)
 
-## whole example
+## Whole example
 
 show https://github.com/CaiJingLong/flutter_listview_loadmore
 
-## install
+## Install
 
 in `pubspec.yaml`
 
@@ -26,13 +26,13 @@ dependencies:
   loadmore: ^2.0.1
 ```
 
-import in dartfile:
+Import in dartfile:
 
 ```dart
 import 'package:loadmore/loadmore.dart';
 ```
 
-use in build:
+Use in build:
 
 ```dart
   @override
@@ -68,15 +68,15 @@ use in build:
   }
 ```
 
-properties use:
+Properties use:
 
 ```properties
-child: Widget ,required , support ListView ListView.builder ListView.separated, other is not support.
-onLoadMore:required A Function , `typedef Future<bool> FutureCallBack();` , reture true is success and status delay,return false or null ,then the status will change to fail.
-isFinish: bool, optional, if true, then the status will change to finish ,default is false
+child: Widget, required , support ListView ListView.builder ListView.separated, other is not support.
+onLoadMore:required A Function, `typedef Future<bool> FutureCallBack();`, reture true is success and status delay,return false or null ,then the status will change to fail.
+isFinish: bool, optional, if true, then the status will change to finish, default is false
 delegate: LoadMoreDelegate,optional, see the LoadMoreDelegate class,default is DefaultLoadMoreDelegate
 textBuilder: optional, the result will show in loading view ,if you use default delegate. default is DefaultLoadMoreText.chinese,
-whenEmptyLoad: bool ,optional, default is true, when [whenEmptyLoad] is true, and when listView children length is 0,or the itemCount is 0,not build loadMoreWidget.
+whenEmptyLoad: bool, optional, default is true, when [whenEmptyLoad] is true, and when listView children length is 0, or the itemCount is 0, not build loadMoreWidget.
 ```
 
 ```dart
